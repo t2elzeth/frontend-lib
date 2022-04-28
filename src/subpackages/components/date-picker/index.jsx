@@ -1,6 +1,6 @@
 import React from "react";
 import Flatpickr from "react-flatpickr";
-import {now, endOfDay} from "@/utils/dateUtils";
+import {now, endOfDay} from "@/subpackages/utils/dateUtils";
 import PropTypes from "prop-types";
 
 export default function DatePicker(props) {

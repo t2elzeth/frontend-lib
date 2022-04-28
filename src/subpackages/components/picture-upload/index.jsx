@@ -7,7 +7,6 @@ import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 
 import ReactCrop from "react-image-crop";
-import "react-image-crop/dist/ReactCrop.css";
 
 export default function PictureUpload({fileName, onClose, onReady}) {
   const [image, setImage] = useState();

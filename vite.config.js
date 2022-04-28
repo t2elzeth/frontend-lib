@@ -1,26 +1,53 @@
+import path from "path";
+import {defineConfig} from "vite";
 import copy from "rollup-plugin-copy";
 
-const path = require("path");
-const {defineConfig} = require("vite");
+const subpackages = [
+  "components",
+  "constants",
+  "hooks",
+  "utils"
+];
 
-function getCopyOptionsForSubpackage(subpackageName) {
+const libraryName = "frontend-lib";
+const subpackagePackageJson = "subpackage.package.json";
+const outputDir = "./dist";
+const bundleFormats = ["esm", "cjs"];
+
+function getSubpackageCopyOptions(subpackageName) {
   return {
-    src: "package.dist.json",
-    dest: `./dist/${subpackageName}`,
+    src: subpackagePackageJson,
+    dest: `${outputDir}/${subpackageName}`,
     transform: (contents) => contents.toString().replace("__SUBPATH__", subpackageName),
     rename: "package.json"
   };
 }
 
-module.exports = defineConfig({
+function getRollupInputOptions() {
+  /*
+  *  returns an object in format:
+  * {
+  *   subpackage1: path.resolve(__dirname, "src/subpackage1/index.js"),
+  *   subpackage2: path.resolve(__dirname, "src/subpackage2/index.js"),
+  *   subpackage3: path.resolve(__dirname, "src/subpackage3/index.js"),
+  * }
+  */
+  return subpackages.reduce((p, n) => {
+    p[n] = path.resolve(__dirname, `src/subpackages/${n}/index.js`);
+    return p;
+  }, {});
+}
+
+function getEntryName({name}) {
+  return name === "index.js" ? "index.js" : "[name]/index.[format].js";
+}
+
+export default defineConfig({
   plugins: [
     copy({
       targets: [
-        {src: "./package.json", dest: "./dist"},
-        getCopyOptionsForSubpackage("components"),
-        getCopyOptionsForSubpackage("constants"),
-        getCopyOptionsForSubpackage("hooks"),
-        getCopyOptionsForSubpackage("utils")
+        {src: "./package.json", dest: outputDir},
+        ...subpackages.map(getSubpackageCopyOptions)
       ],
       hook: "writeBundle"
     })
@@ -33,24 +60,15 @@ module.exports = defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/index.js"),
-      name: "FrontendLib",
-      fileName: (format) => `frontend-lib.${format}.js`,
-      formats: ["esm", "cjs"]
+      fileName: (format) => `${libraryName}.${format}.js`,
+      formats: bundleFormats
     },
+    outDir: outputDir,
     rollupOptions: {
-      input: {
-        components: path.resolve(__dirname, "src/components/index.js"),
-        constants: path.resolve(__dirname, "src/constants/index.js"),
-        hooks: path.resolve(__dirname, "src/hooks/index.js"),
-        utils: path.resolve(__dirname, "src/utils/index.js"),
-      },
+      input: getRollupInputOptions(),
       external: ["react", "react-dom"],
       output: {
-        globals: {
-          react: "React",
-          "react-dom": "ReactDOM",
-        },
-        entryFileNames: ({name}) => name === "index.js" ? "index.js" : "[name]/index.[format].js"
+        entryFileNames: getEntryName
       },
     },
   }

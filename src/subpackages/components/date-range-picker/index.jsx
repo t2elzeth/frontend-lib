@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import DatePicker from "@/components/date-picker";
+import DatePicker from "@/subpackages/components/date-picker";
 import {Form} from "react-bootstrap";
 
 export default function DateRangePicker({dateRange, setDateRange}) {

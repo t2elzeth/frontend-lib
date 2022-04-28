@@ -3,10 +3,10 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import {Dropdown, Row} from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 
-import DatePicker from "@/components/date-picker";
-import {pickModes, getPickModeName} from "@/components/report-period-picker/constants";
-import dateRangeFilter from "@/constants/dateRangeFilter";
-import stateHelper from "@/components/report-period-picker/stateHelper";
+import DatePicker from "@/subpackages/components/date-picker";
+import {pickModes, getPickModeName} from "@/subpackages/components/report-period-picker/constants";
+import dateRangeFilter from "@/subpackages/constants/dateRangeFilter";
+import stateHelper from "@/subpackages/components/report-period-picker/stateHelper";
 
 export default function ReportPeriodPicker({id, onChange}) {
   const [state, setState] = useState(stateHelper.initialState());

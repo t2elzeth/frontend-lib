@@ -1,5 +1,5 @@
-﻿import {pickModes} from "@/components/report-period-picker/constants";
-import {now, yesterday, startOfDay, endOfDay} from "@/utils/dateUtils";
+﻿import {pickModes} from "@/subpackages/components/report-period-picker/constants";
+import {now, yesterday, startOfDay, endOfDay} from "@/subpackages/utils/dateUtils";
 
 function initialState() {
   return {

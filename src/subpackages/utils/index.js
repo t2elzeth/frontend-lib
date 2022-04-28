@@ -1,6 +1,6 @@
-import alerts from "@/utils/alerts";
-import {downloadFile} from "@/utils/downloadFile";
-import {formatFullName, formatDate, formatDateTime} from "./formatUtils";
+import alerts from "@/subpackages/utils/alerts";
+import {downloadFile} from "@/subpackages/utils/downloadFile";
+import {formatFullName, formatDate, formatDateTime} from "@/subpackages/utils/formatUtils";
 import {
   now,
   yesterday,
@@ -8,8 +8,8 @@ import {
   endOfDay,
   daysAgo,
   shiftStart
-} from "@/utils/dateUtils";
-import {httpGet, httpPost, httpPostForm} from "@/utils/apiUtils";
+} from "@/subpackages/utils/dateUtils";
+import {httpGet, httpPost, httpPostForm} from "@/subpackages/utils/apiUtils";
 
 export {
   // notifications
