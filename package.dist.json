@@ -1,0 +1,6 @@
+{
+  "name": "frontend-lib/__SUBPATH__",
+  "private": true,
+  "main": "./index.cjs.js",
+  "module": "./index.es.js"
+}
