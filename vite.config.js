@@ -14,13 +14,24 @@ const subpackagePackageJson = "subpackage.package.json";
 const outputDir = "./dist";
 const bundleFormats = ["esm", "cjs"];
 
-function getSubpackageCopyOptions(subpackageName) {
-  return {
-    src: subpackagePackageJson,
-    dest: `${outputDir}/${subpackageName}`,
-    transform: (contents) => contents.toString().replace("__SUBPATH__", subpackageName),
-    rename: "package.json"
-  };
+function getSubpackageCopyTargets() {
+  function getTarget(subpackageName) {
+    return {
+      src: subpackagePackageJson,
+      dest: `${outputDir}/${subpackageName}`,
+      transform: (contents) => contents.toString().replace("__SUBPATH__", subpackageName),
+      rename: "package.json"
+    };
+  }
+
+  const initialOptions = [
+    {src: "./package.json", dest: outputDir}
+  ];
+
+  return [
+    ...initialOptions,
+    ...subpackages.map(getTarget)
+  ];
 }
 
 function getRollupInputOptions() {
@@ -32,10 +43,14 @@ function getRollupInputOptions() {
   *   subpackage3: path.resolve(__dirname, "src/subpackage3/index.js"),
   * }
   */
+  const initialOptions = {
+    index: path.resolve(__dirname, "src/index.js")
+  };
+
   return subpackages.reduce((p, n) => {
     p[n] = path.resolve(__dirname, `src/subpackages/${n}/index.js`);
     return p;
-  }, {});
+  }, initialOptions);
 }
 
 function getEntryName({name}) {
@@ -45,10 +60,7 @@ function getEntryName({name}) {
 export default defineConfig({
   plugins: [
     copy({
-      targets: [
-        {src: "./package.json", dest: outputDir},
-        ...subpackages.map(getSubpackageCopyOptions)
-      ],
+      targets: getSubpackageCopyTargets(),
       hook: "writeBundle"
     })
   ],
@@ -72,4 +84,5 @@ export default defineConfig({
       },
     },
   }
-});
+})
+;
